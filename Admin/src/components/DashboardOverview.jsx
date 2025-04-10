@@ -1,8 +1,9 @@
 
-import React from 'react';
-import { useProducts } from '../contexts/ProductContext.js';
+import { useProducts } from '@/contexts/ProductContext';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Package, DollarSign, AlertCircle } from "lucide-react";
 
-const DashboardOverview = () => {
+export const DashboardOverview = () => {
   const { stats, products } = useProducts();
 
   const formatCurrency = (value) => {
@@ -15,35 +16,37 @@ const DashboardOverview = () => {
   const lowStockProducts = products.filter(product => product.stock < 10);
 
   return (
-    <div className="stats-grid">
-      <div className="stat-card">
-        <div className="stat-header">
-          <div className="stat-title">Total Products</div>
-          <i className="fas fa-box stat-icon"></i>
-        </div>
-        <div className="stat-value">{stats.totalProducts}</div>
-        <div className="stat-description">Products in your inventory</div>
-      </div>
-      
-      <div className="stat-card">
-        <div className="stat-header">
-          <div className="stat-title">Inventory Value</div>
-          <i className="fas fa-dollar-sign stat-icon"></i>
-        </div>
-        <div className="stat-value">{formatCurrency(stats.totalValue)}</div>
-        <div className="stat-description">Total value of inventory</div>
-      </div>
-      
-      <div className="stat-card">
-        <div className="stat-header">
-          <div className="stat-title">Low Stock</div>
-          <i className={`fas fa-exclamation-circle stat-icon ${stats.lowStock > 0 ? 'low-stock' : ''}`}></i>
-        </div>
-        <div className={`stat-value ${stats.lowStock > 0 ? 'low-stock' : ''}`}>{stats.lowStock}</div>
-        <div className="stat-description">Products with less than 10 items</div>
-      </div>
+    <div className="grid gap-4 md:grid-cols-3">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Total Products</CardTitle>
+          <Package className="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{stats.totalProducts}</div>
+          <p className="text-xs text-muted-foreground">Products in your inventory</p>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Inventory Value</CardTitle>
+          <DollarSign className="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{formatCurrency(stats.totalValue)}</div>
+          <p className="text-xs text-muted-foreground">Total value of inventory</p>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Low Stock</CardTitle>
+          <AlertCircle className={`h-4 w-4 ${stats.lowStock > 0 ? 'text-red-500' : 'text-muted-foreground'}`} />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{stats.lowStock}</div>
+          <p className="text-xs text-muted-foreground">Products with less than 10 items</p>
+        </CardContent>
+      </Card>
     </div>
   );
 };
-
-export default DashboardOverview;

@@ -1,10 +1,21 @@
 
-import React, { useState } from 'react';
-import { useProducts } from '../contexts/ProductContext.js';
-import ProductForm from './ProductForm.js';
-import DeleteProduct from './DeleteProduct.js';
+import { useState } from 'react';
+import { useProducts } from '@/contexts/ProductContext';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from "@/components/ui/table";
+import { ProductForm } from '@/components/ProductForm';
+import { DeleteProduct } from '@/components/DeleteProduct';
+import { Search, Plus } from "lucide-react";
 
-const ProductTable = () => {
+export const ProductTable = () => {
   const { products, searchProducts } = useProducts();
   const [searchQuery, setSearchQuery] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -29,95 +40,90 @@ const ProductTable = () => {
   };
   
   return (
-    <div className="mb-4">
-      <div className="flex justify-between items-center mb-4">
-        <div className="search-container">
-          <i className="fas fa-search search-icon"></i>
-          <input
-            type="text"
-            className="search-input"
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="relative w-72">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
             placeholder="Search products..."
+            className="pl-8"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <button 
-          className="btn btn-primary"
-          onClick={() => setIsAddModalOpen(true)}
-        >
-          <i className="fas fa-plus"></i>
+        <Button onClick={() => setIsAddModalOpen(true)} className="bg-ainopets-purple hover:bg-ainopets-purple/90">
+          <Plus className="mr-2 h-4 w-4" />
           Add Product
-        </button>
+        </Button>
       </div>
       
       {filteredProducts.length === 0 ? (
-        <div className="empty-state">
-          <h3 className="empty-state-title">No products found</h3>
-          <p className="empty-state-description">
-            {searchQuery 
-              ? "Try adjusting your search query" 
-              : "Get started by adding a new product"}
-          </p>
-          {!searchQuery && (
-            <button 
-              onClick={() => setIsAddModalOpen(true)}
-              className="btn btn-outline mt-4"
-            >
-              <i className="fas fa-plus"></i>
-              Add Product
-            </button>
-          )}
+        <div className="flex h-[400px] items-center justify-center rounded-md border border-dashed">
+          <div className="text-center">
+            <h3 className="text-lg font-medium">No products found</h3>
+            <p className="text-sm text-muted-foreground">
+              {searchQuery 
+                ? "Try adjusting your search query" 
+                : "Get started by adding a new product"}
+            </p>
+            {!searchQuery && (
+              <Button 
+                onClick={() => setIsAddModalOpen(true)}
+                variant="outline" 
+                className="mt-4"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add Product
+              </Button>
+            )}
+          </div>
         </div>
       ) : (
-        <div className="table-container">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Stock</th>
-                <th className="text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead>Price</TableHead>
+                <TableHead>Stock</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {filteredProducts.map((product) => (
-                <tr key={product.id}>
-                  <td className="font-weight-bold">{product.name}</td>
-                  <td style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {product.description}
-                  </td>
-                  <td>{formatPrice(product.price)}</td>
-                  <td>
-                    <span className={`stock-indicator ${
+                <TableRow key={product.id}>
+                  <TableCell className="font-medium">{product.name}</TableCell>
+                  <TableCell className="max-w-xs truncate">{product.description}</TableCell>
+                  <TableCell>{formatPrice(product.price)}</TableCell>
+                  <TableCell>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                       product.stock < 10 
-                        ? 'stock-low' 
+                        ? 'bg-red-100 text-red-800' 
                         : product.stock < 30 
-                        ? 'stock-medium' 
-                        : 'stock-high'
+                        ? 'bg-yellow-100 text-yellow-800' 
+                        : 'bg-green-100 text-green-800'
                     }`}>
                       {product.stock} units
                     </span>
-                  </td>
-                  <td className="text-right table-actions">
-                    <button 
-                      className="btn btn-outline btn-icon"
-                      onClick={() => handleEdit(product)}
-                    >
-                      <i className="fas fa-edit"></i>
-                    </button>
-                    <button 
-                      className="btn btn-outline btn-icon"
-                      style={{ color: 'var(--danger-color)' }}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="ghost" size="sm" onClick={() => handleEdit(product)}>
+                      Edit
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-red-500 hover:text-red-700"
                       onClick={() => handleDelete(product)}
                     >
-                      <i className="fas fa-trash"></i>
-                    </button>
-                  </td>
-                </tr>
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       )}
       
@@ -144,5 +150,3 @@ const ProductTable = () => {
     </div>
   );
 };
-
-export default ProductTable;

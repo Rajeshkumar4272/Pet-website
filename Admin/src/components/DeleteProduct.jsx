@@ -1,8 +1,18 @@
 
-import React from 'react';
-import { useProducts } from '../contexts/ProductContext.js';
+import { useProducts } from '@/contexts/ProductContext';
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
-const DeleteProduct = ({ product, isOpen, onClose }) => {
+export const DeleteProduct = ({ product, isOpen, onClose }) => {
   const { deleteProduct } = useProducts();
 
   const handleDelete = () => {
@@ -10,40 +20,23 @@ const DeleteProduct = ({ product, isOpen, onClose }) => {
     onClose();
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2 className="modal-title">Are you sure?</h2>
-          <button className="modal-close" onClick={onClose}>×</button>
-        </div>
-        
-        <div className="modal-body">
-          <p>
+    <AlertDialog open={isOpen} onOpenChange={onClose}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogDescription>
             This will permanently delete "{product.name}" from your products. 
             This action cannot be undone.
-          </p>
-        </div>
-        
-        <div className="modal-footer">
-          <button 
-            className="btn btn-outline" 
-            onClick={onClose}
-          >
-            Cancel
-          </button>
-          <button 
-            className="btn btn-danger" 
-            onClick={handleDelete}
-          >
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={handleDelete} className="bg-red-500 hover:bg-red-600">
             Delete
-          </button>
-        </div>
-      </div>
-    </div>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
-
-export default DeleteProduct;

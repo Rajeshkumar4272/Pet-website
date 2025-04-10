@@ -1,5 +1,6 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
+import { toast } from "sonner";
 
 // Create context
 const ProductContext = createContext();
@@ -26,9 +27,6 @@ export const ProductProvider = ({ children }) => {
     lowStock: 0,
   });
 
-  // Create a toast state
-  const [toast, setToast] = useState(null);
-
   // Save to localStorage whenever products change
   useEffect(() => {
     localStorage.setItem('ainopets-products', JSON.stringify(products));
@@ -41,16 +39,6 @@ export const ProductProvider = ({ children }) => {
     setStats({ totalProducts, totalValue, lowStock });
   }, [products]);
 
-  // Show a toast message
-  const showToast = (message, type = 'success') => {
-    setToast({ message, type });
-    
-    // Auto hide toast after 3 seconds
-    setTimeout(() => {
-      setToast(null);
-    }, 3000);
-  };
-
   // Add a new product
   const addProduct = (product) => {
     const newProduct = {
@@ -58,7 +46,7 @@ export const ProductProvider = ({ children }) => {
       id: Date.now(),
     };
     setProducts([...products, newProduct]);
-    showToast('Product added successfully');
+    toast.success('Product added successfully');
   };
 
   // Update an existing product
@@ -68,13 +56,13 @@ export const ProductProvider = ({ children }) => {
         product.id === updatedProduct.id ? updatedProduct : product
       )
     );
-    showToast('Product updated successfully');
+    toast.success('Product updated successfully');
   };
 
   // Delete a product
   const deleteProduct = (id) => {
     setProducts(products.filter((product) => product.id !== id));
-    showToast('Product deleted successfully');
+    toast.success('Product deleted successfully');
   };
 
   // Search products
@@ -94,29 +82,13 @@ export const ProductProvider = ({ children }) => {
       value={{
         products,
         stats,
-        toast,
         addProduct,
         updateProduct,
         deleteProduct,
-        searchProducts,
-        showToast
+        searchProducts
       }}
     >
       {children}
-      {/* Toast component */}
-      {toast && (
-        <div className="toast-container">
-          <div className={`toast toast-${toast.type}`}>
-            <span className="toast-icon">
-              {toast.type === 'success' && <i className="fas fa-check-circle"></i>}
-              {toast.type === 'error' && <i className="fas fa-exclamation-circle"></i>}
-              {toast.type === 'warning' && <i className="fas fa-exclamation-triangle"></i>}
-            </span>
-            <span>{toast.message}</span>
-            <button className="toast-close" onClick={() => setToast(null)}>×</button>
-          </div>
-        </div>
-      )}
     </ProductContext.Provider>
   );
 };

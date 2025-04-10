@@ -12,7 +12,6 @@ export default defineConfig(({ mode }) => ({
     react(),
   ],
   resolve: {
-    extensions: ['.js', '.jsx'], // Add this line
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
