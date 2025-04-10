@@ -1,20 +1,19 @@
-const express = require('express');
-const cors = require('cors');
-const db = require('../pet-database/db'); // 🟣 connect database
-const foodRoutes = require('./routes/foodRoutes');
-const toyRoutes = require('./routes/toyRoutes');
+import express from 'express'; // Import the express module
+const app=express(); // Create an express application
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+app.use(express.json()); // Middleware to parse JSON request bodies
 
-app.use('/api/food', foodRoutes);
-app.use('/api/toys', toyRoutes);
+app.use(express.urlencoded({extended:true})); // Middleware to parse URL-encoded request bodies
 
-app.get('/', (req, res) => {
-    res.send('Welcome to Aino Petz Backend 🐾');
-});
+app.get('/',(req,res)=>{ // Define a GET route for the root URL
+    res.status(200).json
+({ // Send a JSON response with a status of 200
+        message:"Welcome to Aino Petz Backend" // Message in the JSON response
+    })
+})
+import productRoutes from './routes/productRoutes.js'; // Import product routes
+app.use('/api/products',productRoutes); // Use product routes for the /api/products URL
 
-app.listen(5000, () => {
-    console.log('Aino Petz Backend running on http://localhost:5000');
-});
+
+
+export default app; // Export the express application for use in other modules
