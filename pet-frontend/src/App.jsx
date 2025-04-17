@@ -25,6 +25,7 @@ function App() {
       <Blog />
       <Newsletter />
       <Footer />
+    
     </div>
   );
 }
