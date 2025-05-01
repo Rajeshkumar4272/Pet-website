@@ -3,6 +3,7 @@ import path from "path";
 import logger from "morgan";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middlewares/errorHandler";
+import apiRoutes from "./routes";
 
 export const createApp = (): Application => {
   const app = express();
