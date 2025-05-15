@@ -5,12 +5,22 @@ export interface IPetType extends Document {
   description?: string;
 }
 
-const PetTypeSchema = new Schema<IPetType>(
+const petTypeSchema = new Schema<IPetType>(
   {
-    name: { type: String, required: true, unique: true, trim: true },
-    description: { type: String },
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    description: {
+      type: String,
+      default: "",
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
-export default mongoose.model<IPetType>("PetType", PetTypeSchema);
+export const PetType = mongoose.model<IPetType>("PetType", petTypeSchema);
