@@ -13,8 +13,6 @@ export const registerSchema = z.object({
 
   password: z.string().min(6, { message: "Password must be at least 6 characters long" }),
 
-  profileUrl: z.string().url({ message: "Invalid URL" }),
-
   phone: z.string().length(10, { message: "Phone number must be exactly 10 digits" }),
 
   address: z
@@ -29,5 +27,5 @@ export const registerSchema = z.object({
 
   role: roleEnum.default("customer"), // Defaults to "customer"
 
-  isVerified: z.boolean().default(false)
+  isVerified: z.boolean().default(false),
 });

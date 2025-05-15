@@ -4,16 +4,18 @@ import logger from "morgan";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middlewares/errorHandler";
 import apiRoutes from "./routes";
+import cors from "cors";
 
 export const createApp = (): Application => {
   const app = express();
 
   // Third-party middleware
+  app.use(cors());
   app.use(logger("dev"));
   app.use(express.json());
-  app.use(express.urlencoded({ extended: false }));
+  app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
-  app.use(express.static(path.join(__dirname, "public")));
+  app.use(express.static("public"));
 
   // API Routes
   app.use("/api/v1", apiRoutes);

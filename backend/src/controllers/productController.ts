@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Product from "../models/Product";
-import { AppError } from "../utils/appError";
+import { AppError } from "../utils/apiError";
 import { ApiResponse, sendSuccess } from "../utils/apiResponse";
 
 export const createProduct = async (req: Request, res: Response) => {

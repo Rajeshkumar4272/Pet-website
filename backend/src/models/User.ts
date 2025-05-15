@@ -25,6 +25,7 @@ const UserSchema: Schema = new Schema<IUser>(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     phone: { type: String },
+    profileUrl: { type: String },
     address: {
       street: { type: String },
       city: { type: String },
