@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcryptjs";
 import User, { IUser } from "../models/User";
-import { AppError } from "../utils/AppError";
 import { generateToken } from "../utils/generateToken";
 import { cookieOptions } from "../utils/cookieOptions";
-import { ApiResponse } from "../utils/ApiResponse";
+import { AppError } from "../utils/appError";
+import { ApiResponse } from "../utils/apiResponse";
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -40,11 +40,13 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
+
     if (!user) {
       return next(new AppError("Invalid credentials", 401));
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
+
     if (!isMatch) {
       return next(new AppError("Invalid credentials", 401));
     }

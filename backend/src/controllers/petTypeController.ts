@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import PetType from "../models/PetType";
 import { ApiResponse } from "../utils/apiResponse";
-import { AppError } from "../utils/AppError";
+import { AppError } from "../utils/appError";
 
 export const createPetType = async (req: Request, res: Response) => {
   const petType = await PetType.create(req.body);
